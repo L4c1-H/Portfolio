@@ -1,30 +1,12 @@
+package Logic;
 import java.util.Scanner;
+
+import GUI.Login;
 
 public class ATM {
 
-	
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		
-		BankLogic bank = new BankLogic();
-		
-		User user = bank.addUser("Jane", "Doe", "4321");
-		
-		Account acc = new Account("", user, bank);
-		
-		user.addAccount(acc);
-		bank.addAccount(acc);
-		
-		while(true) {
-			
-			User current = ATM.mainMenuPrompt(bank, scanner);
-			
-			ATM.printUserMenu(current, scanner);
-			
-		}
-	}
 
-	private static void printUserMenu(User current, Scanner scanner) {
+	public void printUserMenu(User current, Scanner scanner) {
 		
 		current.printAccountSummary();
 		
@@ -42,31 +24,34 @@ public class ATM {
 			
 			choice = scanner.nextInt();
 			
+			//This is needed because the cursor is left after the integer otherwise.
+			scanner.nextLine();
+			
 			if(choice < 1 || choice > 5) 
 				System.out.println("Invalid input");
 			
 		}while(choice < 1 || choice > 5);
 		
 		switch(choice) {
-		case 1:ATM.showTransactionHistory(current, scanner);
+		case 1:this.showTransactionHistory(current, scanner);
 				break;
-		case 2:ATM.whitdraw(current, scanner);
+		case 2:this.whitdraw(current, scanner);
 			break;
-		case 3:ATM.deposit(current, scanner);
+		case 3:this.deposit(current, scanner);
 			break;
-		case 4:ATM.transfer(current, scanner);
+		case 4:this.transfer(current, scanner);
 			break;
 		case 5:System.exit(1);
 			break;
 		}
 		
 		if(choice != 5) {
-			ATM.printUserMenu(current, scanner);
+			this.printUserMenu(current, scanner);
 		}
 		
 	}
 
-	private static void transfer(User current, Scanner scanner) {
+	public void transfer(User current, Scanner scanner) {
 
 		String accountFrom;
 		String AccountTo;
@@ -118,36 +103,34 @@ public class ATM {
 			current.addAccountTransaction(to, transferAmount, String.format("Transfer from account %s.", from.getId()));
 		}
 		
-		ATM.printUserMenu(current, scanner);
+		this.printUserMenu(current, scanner);
 		
 	}
 
-	private static void deposit(User current, Scanner scanner) {
+	public void deposit(User current, Scanner scanner) {
 		String accountFrom;
 		Account from = null;
-		boolean foundF = false;
 		do {
 			
-			System.out.println("Which account do you want to transfer from?");
+			System.out.println("Which account do you want to transfer to?");
 			accountFrom = scanner.nextLine();
 			
 			for(Account a : current.getAccounts()) {
 				if(a.getAccountId().contentEquals(accountFrom)) {
 					from = a;
-					foundF = true;
 					break;
 				}
 			}
 			
-			if(!foundF) {
-				System.out.println("Wrong account ID");
+			if(from == null) {
+				System.out.println("Wrong account ID.");
 			}
 			
-		}while(!foundF);
+		}while(from == null);
 		
 		double depositAmount;
 		do {
-			System.out.println("How much do you want to transfer?");
+			System.out.println("How much do you want to deposit?");
 			depositAmount = scanner.nextDouble();
 			if(depositAmount <= 0)
 				System.out.println("Amount must be grater than 0");
@@ -156,11 +139,11 @@ public class ATM {
 		
 		current.addAccountTransaction(from, depositAmount, "Deposit");
 		
-		ATM.printUserMenu(current, scanner);
+		this.printUserMenu(current, scanner);
 		
 	}
 
-	private static void whitdraw(User current, Scanner scanner) {
+	public void whitdraw(User current, Scanner scanner) {
 		String accountFrom;
 		Account from = null;
 		boolean foundF = false;
@@ -199,11 +182,11 @@ public class ATM {
 			current.addAccountTransaction(from, -1 * whitdrawAmount, "Whitdraw");
 		}
 		
-		ATM.printUserMenu(current, scanner);
+		this.printUserMenu(current, scanner);
 		
 	}
 
-	private static void showTransactionHistory(User current, Scanner scanner) {
+	public void showTransactionHistory(User current, Scanner scanner) {
 		
 		String accountId;
 		Account selected = null;
@@ -227,11 +210,11 @@ public class ATM {
 			
 		}while(!found);
 		selected.printHistory();
-		ATM.printUserMenu(current, scanner);
+		this.printUserMenu(current, scanner);
 	}
 
-	private static User mainMenuPrompt(BankLogic bank, Scanner scanner) {
-		String Id;
+	public User mainMenuPrompt(BankLogic bank, Scanner scanner) {
+		/*String Id;
 		String pin;
 		User auth;
 		
@@ -250,7 +233,17 @@ public class ATM {
 				
 		}while(auth == null);
 		
-		return auth;
+		return auth;*/
+		
+		new Login(this, bank);
+		
+		return null;
+	}
+
+	public User correctLogin(String puname, String ppaswd, BankLogic bank) {
+		
+		return bank.userLogin(puname, ppaswd);
+		
 	}
 	
 }

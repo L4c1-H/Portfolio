@@ -1,3 +1,4 @@
+package Logic;
 import java.util.ArrayList;
 
 import SecureStringGen.RandomString;

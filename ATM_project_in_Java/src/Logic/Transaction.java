@@ -1,3 +1,4 @@
+package Logic;
 import java.util.Date;
 
 public class Transaction {
@@ -28,5 +29,13 @@ public class Transaction {
 
 	public String getSummary() {
 		return String.format("%s: %.02f, %s", timeOfTransaction.toString(), amount, memo);
+	}
+
+	public Date getDate() {
+		return timeOfTransaction;
+	}
+
+	public String getMemo() {
+		return memo;
 	}
 }

@@ -1,3 +1,4 @@
+package Logic;
 import java.util.ArrayList;
 
 public class Account {
@@ -59,6 +60,14 @@ public class Account {
 	private void addTransaction(Transaction transaction) {
 		transactions.add(transaction);
 		
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public ArrayList<Transaction> getTransactions() {
+		return transactions;
 	}
 	
 }

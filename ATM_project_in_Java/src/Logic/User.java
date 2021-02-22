@@ -1,3 +1,4 @@
+package Logic;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.ArrayList;
